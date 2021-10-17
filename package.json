@@ -2,7 +2,7 @@
   "name": "fstring-converter",
   "displayName": "f-string Converter (Python 3.6+)",
   "description": "Converts python string to f-string and vice-versa based on presence of {.*} within quotes.",
-  "version": "0.3.0",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -57,7 +57,7 @@
     "mocha": "^9.1.1",
     "typescript": "^4.4.3"
   },
-  "icon": "src/images/logo.png",
+  "icon": "logo.png",
   "keywords": [
     "python",
     "string",
