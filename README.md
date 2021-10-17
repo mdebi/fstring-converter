@@ -55,7 +55,3 @@ my_str = (
     f"terminates with another {f_string}"
 )
 ```
-
-## Release Notes
-
-Please refer to ![Changelog](CHANGELOG.md) section.
