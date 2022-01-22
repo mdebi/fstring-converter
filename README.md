@@ -40,6 +40,7 @@ Conversion Example:
 This extension contributes the following settings:
 
 - `fstring-converter.enable`: enable/disable this extension
+- `fstring-converter.skipEvaluationPostManualDeletionOfF`: If single character `f` before quote is deleted, skip addition of `f`. Even if it is enabled (default), on changing anything on the same line it will still be re-evaluated as we cannot memoize the removals.
 
 ## Known Issues / Limitations
 

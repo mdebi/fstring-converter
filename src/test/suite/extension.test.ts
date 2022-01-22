@@ -360,31 +360,19 @@ suite.skip("isFString validation", () => {
   });
 
   test("check1 \"'' f'{a}'\"", () => {
-    assert.strictEqual(
-      fstringConverterExtension.isFString("'' f'{a}'", 0, 1),
-      false
-    );
+    assert.strictEqual(fstringConverterExtension.isFString("'' f'{a}'", 0, 1), false);
   });
 
   test("check2 \"'' f'{a}'\"", () => {
-    assert.strictEqual(
-      fstringConverterExtension.isFString("'' f'{a}'", 5, 8),
-      true
-    );
+    assert.strictEqual(fstringConverterExtension.isFString("'' f'{a}'", 5, 8), true);
   });
 
   test("check3 \"'' f'{a}'\"", () => {
-    assert.strictEqual(
-      fstringConverterExtension.isFString("'' f'{a}'", 4, 8),
-      true
-    );
+    assert.strictEqual(fstringConverterExtension.isFString("'' f'{a}'", 4, 8), true);
   });
 
   test("check4 \"'' f'{a}'\"", () => {
-    assert.strictEqual(
-      fstringConverterExtension.isFString("'' f'{a}'", 2, 8),
-      true
-    );
+    assert.strictEqual(fstringConverterExtension.isFString("'' f'{a}'", 2, 8), true);
   });
 });
 

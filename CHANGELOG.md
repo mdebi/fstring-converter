@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2022-01-23
+
+### Added
+
+- added capability to remove f manually and the extension won't add it again. This is default behaviour now and can be turned off by unchecking `fstring-converter.skipEvaluationPostManualDeletionOfF`.
+
+_Note_:
+
+- There is no change to existing behaviour unless we manually edit the f added.
+- It is still not possible to add f to a string that is not a f-string.
+- This only allows to remove f from an already added f-string. Undo works as before.
+
 ## [0.1.1] - 2021-10-18
 
 ### Added
@@ -18,6 +30,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial release
-
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/v0.1.0
