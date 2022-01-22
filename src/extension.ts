@@ -29,6 +29,7 @@ interface ActionType {
 interface InputType {
   lineNumber: number;
   text: string;
+  singleCharDeletionIndex: number;
 }
 
 interface QuoteRangeType {
@@ -38,11 +39,12 @@ interface QuoteRangeType {
   shouldBeFString: boolean;
 }
 
-const convertFStringInEditorContext = async (
-  e: vscode.TextDocumentChangeEvent
-) => {
+const convertFStringInEditorContext = async (e: vscode.TextDocumentChangeEvent) => {
   const configuration = vscode.workspace.getConfiguration();
   const enabled = configuration.get<boolean>("fstring-converter.enable");
+  const skipEvaluationPostManualDeletionOfF = configuration.get<boolean>(
+    "fstring-converter.skipEvaluationPostManualDeletionOfF"
+  );
   if (enabled && e.document.languageId === "python") {
     try {
       const changes = e.contentChanges[0];
@@ -62,6 +64,12 @@ const convertFStringInEditorContext = async (
                   return {
                     lineNumber: lineNumber + offset,
                     text: e.document.lineAt(lineNumber + offset).text,
+                    singleCharDeletionIndex:
+                      skipEvaluationPostManualDeletionOfF === true &&
+                      changes.text === "" &&
+                      changes.range.start.character + 1 === changes.range.end.character
+                        ? changes.range.start.character
+                        : -1,
                   };
                 });
               const convertActions = await generateMultiLineConversionActions(
@@ -83,8 +91,9 @@ const generateMultiLineConversionActions = async (
 ): Promise<ActionType[]> => {
   let conversionActions: ActionType[] = [];
   for (let input of inputs) {
-    const singleLineConversionActions =
-      await generateSingleLineConversionActions(input);
+    const singleLineConversionActions = await generateSingleLineConversionActions(
+      input
+    );
     if (singleLineConversionActions.length > 0) {
       conversionActions.push(...singleLineConversionActions);
     }
@@ -99,7 +108,11 @@ const generateSingleLineConversionActions = async (
   if (!(await isComment(input.text))) {
     const quoteRanges: QuoteRangeType[] = getQuoteRanges(input.text);
     for (const quoteRange of quoteRanges) {
-      if (quoteRange.shouldBeFString && !quoteRange.alreadyFString) {
+      if (
+        quoteRange.shouldBeFString &&
+        !quoteRange.alreadyFString &&
+        input.singleCharDeletionIndex !== quoteRange.start
+      ) {
         conversionActions.push({
           actionFSymbol: "add",
           quoteIndex: quoteRange.start,
@@ -173,11 +186,7 @@ export const getQuoteRanges = (input: string): QuoteRangeType[] => {
   return quoteRanges.sort((a, b) => b.start - a.start);
 };
 
-export const isFString = (
-  input: string,
-  start: number,
-  end: number
-): boolean => {
+export const isFString = (input: string, start: number, end: number): boolean => {
   let isFString = false,
     length = input.length,
     openingCurlyBraceIndex = -1,
