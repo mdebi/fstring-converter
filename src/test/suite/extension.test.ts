@@ -333,7 +333,7 @@ print(fstring)`,
   });
 });
 
-suite.skip("isFString validation", () => {
+suite("isFString validation", () => {
   const testData: [string, boolean][] = [
     ["''", false],
     ["f''", false],
@@ -376,7 +376,7 @@ suite.skip("isFString validation", () => {
   });
 });
 
-suite.skip("getQuoteRanges validation", () => {
+suite("getQuoteRanges validation", () => {
   const doubleQuote = '"',
     singleQuote = "'",
     testData = [singleQuote, doubleQuote];
@@ -430,6 +430,17 @@ suite.skip("getQuoteRanges validation", () => {
           [17, 30, false, true],
           [4, 10, false, true],
           [0, 13, false, true],
+        ],
+      ],
+      [`${quote}a ${otherQuote}{b}${otherQuote}${quote}`, [[0, 8, false, true]]],
+      [
+        `${quote}a ${otherQuote}{b}${otherQuote}${quote} + ${quote}a ${otherQuote}{b}${otherQuote}${quote} + ${quote}a${otherQuote}{b}${otherQuote}${quote} + ${quote}a[${otherQuote}{b}${otherQuote}]${quote}`,
+        [
+          [38, 42, false, true],
+          [35, 44, false, true],
+          [24, 31, false, true],
+          [12, 20, false, true],
+          [0, 8, false, true],
         ],
       ],
     ];
