@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2022-01-23
+
+### Changed
+
+- Handle nested f-string better. Only add f if it is used as an index to access array elements. Any other specific use cases are to be implemented when one is discovered that is not handled correctly.
+- Bump the major.
+
 ## [0.1.2] - 2022-01-23
 
 ### Added
