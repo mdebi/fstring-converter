@@ -150,9 +150,20 @@ export const getQuoteRanges = (input: string): QuoteRangeType[] => {
         lastQuoteUsed = currentChar;
       } else {
         if (lastQuoteUsed !== currentChar) {
-          quoteStack.push({ start: quoteStartIndex, quoteUsed: lastQuoteUsed });
-          quoteStartIndex = index;
-          lastQuoteUsed = currentChar;
+          let squareBracketOpened = false;
+          for (let anotherIndex = index - 1; anotherIndex > 0; anotherIndex--) {
+            if (input[anotherIndex] === "[") {
+              squareBracketOpened = true;
+              break;
+            } else if (input[anotherIndex] !== " ") {
+              break;
+            }
+          }
+          if (squareBracketOpened) {
+            quoteStack.push({ start: quoteStartIndex, quoteUsed: lastQuoteUsed });
+            quoteStartIndex = index;
+            lastQuoteUsed = currentChar;
+          }
         } else {
           quoteEndIndex = index;
         }
