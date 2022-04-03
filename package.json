@@ -68,6 +68,8 @@
     "string",
     "converter",
     "auto",
-    "autocorrect"
+    "autocorrect",
+    "fstring",
+    "f-string"
   ]
 }

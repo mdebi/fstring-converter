@@ -17,6 +17,7 @@ Even if the string is going to be a `f-string`, starting with f will remove unti
 At any time undo in editor will revert the genrated code edits.
 
 Conversion Example:
+
 | Input                 | Output                  |
 | --------------------- | ----------------------- |
 | `""`                  | `""`                    |
