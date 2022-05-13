@@ -149,7 +149,9 @@ export const getQuoteRanges = (input: string): QuoteRangeType[] => {
         quoteStartIndex = index;
         lastQuoteUsed = currentChar;
       } else {
-        if (lastQuoteUsed !== currentChar) {
+        if (lastQuoteUsed === currentChar && input[index - 1] !== "\\") {
+          quoteEndIndex = index;
+        } else {
           let squareBracketOpened = false;
           for (let anotherIndex = index - 1; anotherIndex > 0; anotherIndex--) {
             if (input[anotherIndex] === "[") {
@@ -164,8 +166,6 @@ export const getQuoteRanges = (input: string): QuoteRangeType[] => {
             quoteStartIndex = index;
             lastQuoteUsed = currentChar;
           }
-        } else {
-          quoteEndIndex = index;
         }
       }
     }
