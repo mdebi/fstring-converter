@@ -330,6 +330,28 @@ print(fstring)`,
       };
       return withTempRandomPyFileEditor(initialContent, data);
     });
+
+    test("escaped string 1", () => {
+      const escapedString = `${quote}Something\\${quote}s ${otherQuote}{foo}${otherQuote}${quote}`;
+      const data = {
+        snippet: escapedString,
+        positionStart: 1,
+        positionLength: 1,
+        expectedContent: `f${escapedString}`,
+      };
+      return withTempRandomPyFileEditor(initialContent, data);
+    });
+
+    test("escaped string 2", () => {
+      const escapedString = `${quote}Something\\${otherQuote}s \\${quote}{foo}\\${quote}${quote}`;
+      const data = {
+        snippet: escapedString,
+        positionStart: 1,
+        positionLength: 1,
+        expectedContent: `f${escapedString}`,
+      };
+      return withTempRandomPyFileEditor(initialContent, data);
+    });
   });
 });
 
@@ -442,6 +464,14 @@ suite("getQuoteRanges validation", () => {
           [12, 20, false, true],
           [0, 8, false, true],
         ],
+      ],
+      [
+        `${quote}Something\\${quote}s ${otherQuote}{foo}${otherQuote}${quote}`,
+        [[0, 21, false, true]],
+      ],
+      [
+        `${quote}Something\\${otherQuote}s \\${quote}{foo}\\${quote}${quote}`,
+        [[0, 23, false, true]],
       ],
     ];
     testData.forEach((testDataItem) => {
