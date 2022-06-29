@@ -42,9 +42,6 @@ interface QuoteRangeType {
 const convertFStringInEditorContext = async (e: vscode.TextDocumentChangeEvent) => {
   const configuration = vscode.workspace.getConfiguration();
   const enabled = configuration.get<boolean>("fstring-converter.enable");
-  const skipEvaluationPostManualDeletionOfF = configuration.get<boolean>(
-    "fstring-converter.skipEvaluationPostManualDeletionOfF"
-  );
   if (enabled && e.document.languageId === "python") {
     try {
       const changes = e.contentChanges[0];
@@ -65,7 +62,6 @@ const convertFStringInEditorContext = async (e: vscode.TextDocumentChangeEvent) 
                     lineNumber: lineNumber + offset,
                     text: e.document.lineAt(lineNumber + offset).text,
                     singleCharDeletionIndex:
-                      skipEvaluationPostManualDeletionOfF === true &&
                       changes.text === "" &&
                       changes.range.start.character + 1 === changes.range.end.character
                         ? changes.range.start.character
