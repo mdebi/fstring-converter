@@ -1,0 +1,75 @@
+on: workflow_dispatch
+
+jobs:
+  create-tag:
+    name: create-tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.CI_TOKEN }}
+
+      - name: install gitversion tool
+        uses: gittools/actions/gitversion/setup@v0.9.4
+        with:
+          versionSpec: "5.x"
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+      - name: execute gitversion
+        id: gitversion # step id used as reference for output values
+        uses: gittools/actions/gitversion/execute@v0.9.4
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+      - name: print gitversion
+        run: |
+          echo "Major: ${{ steps.gitversion.outputs.major }}"
+          echo "Minor: ${{ steps.gitversion.outputs.minor }}"
+          echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+          echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
+          echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
+
+      - name: Check if tag exists
+        run: |
+          if [ ! -z $(git tag -l "$TAG_NAME") ]; then
+            echo "Tag [$TAG_NAME] exists. Aborting."
+            exit 1
+          fi
+        env:
+          TAG_NAME: v${{ steps.gitversion.outputs.semVer }}
+
+      - name: add version in CHANGELOG.md
+        env:
+          VERSION: "${{ steps.gitversion.outputs.semVer }}"
+        run: npx auto-changelog --template keepachangelog --commit-limit false --ignore-commit-pattern "yml|changelog" --latest-version ${{ steps.gitversion.outputs.semVer }}
+
+      - name: Commit files
+        env:
+          CI_USER: ${{ secrets.CI_USER }}
+          CI_EMAIL: ${{ secrets.CI_EMAIL }}
+        run: |
+          git config --local user.email "$CI_EMAIL"
+          git config --local user.name "$CI_USER"
+          git add CHANGELOG.md && git commit -m 'Updated CHANGELOG.md' && echo "push=true" >> $GITHUB_ENV || echo "No changes to CHANGELOG.md"
+
+      - name: Push changes
+        if: env.push == 'true'
+        run: |
+          git push "https://$CI_USER:$CI_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:$BRANCH_NAME
+        env:
+          CI_USER: ${{ secrets.CI_USER }}
+          CI_TOKEN: ${{ secrets.CI_TOKEN }}
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
+      - name: Create and Push tag
+        if: success() && env.push == 'true' && ${{ github.ref_name }} == "main"
+        run: |
+          git tag -a $TAG_NAME -m $TAG_NAME
+          git push "https://$CI_USER:$CI_TOKEN@github.com/$GITHUB_REPOSITORY.git" $TAG_NAME -f
+        env:
+          CI_USER: ${{ secrets.CI_USER }}
+          CI_TOKEN: ${{ secrets.CI_TOKEN }}
+          TAG_NAME: v${{ steps.gitversion.outputs.semVer }}
