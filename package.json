@@ -31,11 +31,6 @@
             "type": "boolean",
             "description": "Extension is enabled. This should not be used with python version below 3.6 and `str.format` is not supported.",
             "default": true
-          },
-          "fstring-converter.skipEvaluationPostManualDeletionOfF": {
-            "type": "boolean",
-            "description": "If single character `f` before quote is deleted, skip addition of `f`. Even if it is enabled (default), on changing anything on the same line it will still be re-evaluated as we cannot memoize the removals.",
-            "default": true
           }
         }
       }
