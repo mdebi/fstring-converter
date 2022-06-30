@@ -1,3 +1,9 @@
+//@ts-check
+"use strict";
+
+//@ts-check
+/** @typedef {import('webpack').Configuration} WebpackConfig **/
+
 const path = require("path");
 const webpack = require("webpack");
 
@@ -29,9 +35,6 @@ const webConfig = /** @type WebpackConfig */ {
       path: require.resolve("path-browserify"),
       fs: false,
     },
-  },
-  stats: {
-    errorDetails: true,
   },
   module: {
     rules: [
