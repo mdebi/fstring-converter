@@ -27,7 +27,7 @@ jobs:
       - name: Run test
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: npm test-node
+          run: npm run test
 
       - name: Publish to VSCode marketplace
         if: success() && startsWith(github.ref, 'refs/tags/')
