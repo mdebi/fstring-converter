@@ -56,3 +56,9 @@ my_str = (
     f"terminates with another {f_string}"
 )
 ```
+
+## Reference
+
+- <https://github.com/meganrogge/template-string-converter>
+- <https://github.com/aeschli/vscode-css-formatter/blob/master/webpack.config.js>
+- <https://code.visualstudio.com/api/extension-guides/web-extensions#update-existing-extensions-to-web-extensions>
