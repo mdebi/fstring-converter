@@ -107,6 +107,7 @@ const generateSingleLineConversionActions = async (
       if (
         quoteRange.shouldBeFString &&
         !quoteRange.alreadyFString &&
+        !quoteRange.isRawOrUnicodeString &&
         input.singleCharDeletionIndex !== quoteRange.start
       ) {
         conversionActions.push({
@@ -114,7 +115,7 @@ const generateSingleLineConversionActions = async (
           quoteIndex: quoteRange.start,
           lineNumber: input.lineNumber,
         });
-      } else if (!quoteRange.shouldBeFString && quoteRange.alreadyFString) {
+      } else if (quoteRange.alreadyFString && (!quoteRange.shouldBeFString) && (!isRawOrUnicodeString)) {
         conversionActions.push({
           actionFSymbol: "remove",
           quoteIndex: quoteRange.start,
@@ -168,11 +169,13 @@ export const getQuoteRanges = (input: string): QuoteRangeType[] => {
     if (quoteEndIndex !== -1) {
       const shouldBeFString = isFString(input, quoteStartIndex, quoteEndIndex);
       const alreadyFString = startsWithF(input, quoteStartIndex, quoteEndIndex);
+      const isRawOrUnicodeString = startsWithF(input, quoteStartIndex, quoteEndIndex);
       quoteRanges.push({
         start: quoteStartIndex,
         end: quoteEndIndex,
         shouldBeFString: shouldBeFString,
         alreadyFString: alreadyFString,
+        isRawOrUnicodeString: isRawOrUnicodeString,
       });
       quoteEndIndex = -1;
       if (quoteStack.length > 0) {
@@ -222,6 +225,13 @@ const startsWithF = (input: string, start: number, end: number): boolean => {
   let starts = false;
   if (start > 0) {
     starts = input[start - 1] === "f";
+  }
+  return starts;
+};
+const startsWithROrU = (input: string, start: number, end: number): boolean => {
+  let starts = false;
+  if (start > 0) {
+    starts = input[start - 1] === "r" || input[start - 1] === "u";
   }
   return starts;
 };
