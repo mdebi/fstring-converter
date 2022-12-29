@@ -48,7 +48,7 @@ const convertFStringInEditorContext = async (e: vscode.TextDocumentChangeEvent) 
       if (changes && e.reason !== TextDocumentChangeReason.Undo) {
         if (
           vscode.window.activeTextEditor &&
-          vscode.window.activeTextEditor.selections.length > 0
+          vscode.window.activeTextEditor.selections.length > 0]
         ) {
           for (const selection of vscode.window.activeTextEditor.selections) {
             const lineNumber = selection.start.line;
@@ -115,11 +115,15 @@ const generateSingleLineConversionActions = async (
           quoteIndex: quoteRange.start,
           lineNumber: input.lineNumber,
         });
-      } else if (quoteRange.alreadyFString && (!quoteRange.shouldBeFString) && (!isRawOrUnicodeString)) {
+      } else if (
+        quoteRange.alreadyFString &&
+        !quoteRange.shouldBeFString &&
+        !quoteRange.isRawOrUnicodeString
+      ) {
         conversionActions.push({
-          actionFSymbol: "remove",
-          quoteIndex: quoteRange.start,
-          lineNumber: input.lineNumber,
+            actionFSymbol: "remove",
+            quoteIndex: quoteRange.start,
+            lineNumber: input.lineNumber,
         });
       }
     }
