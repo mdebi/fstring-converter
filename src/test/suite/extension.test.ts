@@ -352,6 +352,42 @@ print(fstring)`,
       };
       return withTempRandomPyFileEditor(initialContent, data);
     });
+
+    test("raw string with {}", () => {
+      const rawString = `${quote}{abc}${quote}  r${quote}Something{foo}  ${quote}  ${quote}{abc}${quote} ${quote}abc${quote} r${quote}Something${quote}`;
+      const expectedString = `f${quote}{abc}${quote}  r${quote}Something{foo}  ${quote}  f${quote}{abc}${quote} ${quote}abc${quote} r${quote}Something${quote}`;
+      const data = {
+        snippet: rawString,
+        positionStart: 1,
+        positionLength: 1,
+        expectedContent: expectedString,
+      };
+      return withTempRandomPyFileEditor(initialContent, data);
+    });
+
+    test("bytes with {}", () => {
+      const rawString = `${quote}{abc}${quote}  b${quote}Something{foo}  ${quote}  ${quote}{abc}${quote} ${quote}abc${quote} b${quote}Something${quote}`;
+      const expectedString = `f${quote}{abc}${quote}  b${quote}Something{foo}  ${quote}  f${quote}{abc}${quote} ${quote}abc${quote} b${quote}Something${quote}`;
+      const data = {
+        snippet: rawString,
+        positionStart: 1,
+        positionLength: 1,
+        expectedContent: expectedString,
+      };
+      return withTempRandomPyFileEditor(initialContent, data);
+    });
+
+    test("unicodes with {}", () => {
+      const rawString = `${quote}{abc}${quote}  u${quote}Something{foo}  ${quote}  ${quote}{abc}${quote} ${quote}abc${quote} u${quote}Something${quote}`;
+      const expectedString = `f${quote}{abc}${quote}  u${quote}Something{foo}  ${quote}  f${quote}{abc}${quote} ${quote}abc${quote} u${quote}Something${quote}`;
+      const data = {
+        snippet: rawString,
+        positionStart: 1,
+        positionLength: 1,
+        expectedContent: expectedString,
+      };
+      return withTempRandomPyFileEditor(initialContent, data);
+    });
   });
 });
 
@@ -370,7 +406,7 @@ suite("isFString validation", () => {
     ['"{} {def} {} g"', true],
     ['"{} {def} {g} g"', true],
     ['"g {} {def} {g} g"', true],
-    ['"{}{}{}"', false],
+    ['r"a"', false],
   ];
   testData.forEach((dataItem) => {
     test(`check ${dataItem}`, () => {
@@ -395,6 +431,10 @@ suite("isFString validation", () => {
 
   test("check4 \"'' f'{a}'\"", () => {
     assert.strictEqual(fstringConverterExtension.isFString("'' f'{a}'", 2, 8), true);
+  });
+
+  test("check5 \"r'{a}'\"", () => {
+    assert.strictEqual(fstringConverterExtension.isFString("r'{a}'", 1, 5), false);
   });
 });
 
@@ -472,6 +512,34 @@ suite("getQuoteRanges validation", () => {
       [
         `${quote}Something\\${otherQuote}s \\${quote}{foo}\\${quote}${quote}`,
         [[0, 23, false, true]],
+      ],
+      [
+        "  r'Something{foo}  ' r'Something'",
+        [
+          [23, 33, false, false],
+          [3, 20, false, false],
+        ],
+      ],
+      [
+        "  r'Something{foo}  ' r'Something'",
+        [
+          [23, 33, false, false],
+          [3, 20, false, false],
+        ],
+      ],
+      [
+        "u'Something{foo}  ' u'Something'",
+        [
+          [21, 31, false, false],
+          [1, 18, false, false],
+        ],
+      ],
+      [
+        " b'Something{foo}  ' b'Something'",
+        [
+          [22, 32, false, false],
+          [2, 19, false, false],
+        ],
       ],
     ];
     testData.forEach((testDataItem) => {

@@ -193,25 +193,31 @@ export const getQuoteRanges = (input: string): QuoteRangeType[] => {
   return quoteRanges.sort((a, b) => b.start - a.start);
 };
 
+const isRawOrBytesOrUnicode = (input: string, start: number): boolean => {
+  return ["r", "b", "u"].includes(input.charAt(start - 1));
+};
+
 export const isFString = (input: string, start: number, end: number): boolean => {
   let isFString = false,
     length = input.length,
     openingCurlyBraceIndex = -1,
     closingCurlyBraceIndex = -1;
-  for (let index = start; index < length && index <= end; index++) {
-    if (input.charAt(index) === "{") {
-      openingCurlyBraceIndex = index;
-    } else if (openingCurlyBraceIndex > 0 && input.charAt(index) === "}") {
-      closingCurlyBraceIndex = index;
-      if (
-        openingCurlyBraceIndex > 0 &&
-        closingCurlyBraceIndex > 0 &&
-        closingCurlyBraceIndex - openingCurlyBraceIndex > 1
-      ) {
-        isFString = true;
-        break;
-      } else {
-        openingCurlyBraceIndex = -1;
+  if (!isRawOrBytesOrUnicode(input, start)) {
+    for (let index = start; index < length && index <= end; index++) {
+      if (input.charAt(index) === "{") {
+        openingCurlyBraceIndex = index;
+      } else if (openingCurlyBraceIndex > 0 && input.charAt(index) === "}") {
+        closingCurlyBraceIndex = index;
+        if (
+          openingCurlyBraceIndex > 0 &&
+          closingCurlyBraceIndex > 0 &&
+          closingCurlyBraceIndex - openingCurlyBraceIndex > 1
+        ) {
+          isFString = true;
+          break;
+        } else {
+          openingCurlyBraceIndex = -1;
+        }
       }
     }
   }
