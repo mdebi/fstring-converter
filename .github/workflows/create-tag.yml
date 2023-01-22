@@ -55,7 +55,7 @@ jobs:
       - name: add version in CHANGELOG.md
         env:
           VERSION: "${{ steps.gitversion.outputs.semVer }}"
-        run: npx auto-changelog --template keepachangelog --commit-limit false --ignore-commit-pattern "yml|changelog" --latest-version ${{ steps.gitversion.outputs.semVer }}
+        run: npx auto-changelog --template keepachangelog --commit-limit false --ignore-commit-pattern "yml|changelog|ci" --latest-version ${{ steps.gitversion.outputs.semVer }}
 
       - name: Commit files
         env:
