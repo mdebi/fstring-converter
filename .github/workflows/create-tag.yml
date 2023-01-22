@@ -16,6 +16,12 @@ jobs:
         with:
           node-version: "18"
 
+      - name: clean install dependencies
+        run: npm ci
+
+      - name: Run tests (Linux)
+        run: xvfb-run -a npm test
+
       - name: install gitversion tool
         uses: gittools/actions/gitversion/setup@v0.9.15
         with:
