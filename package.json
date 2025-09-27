@@ -62,7 +62,7 @@
     "assert": "^2.0.0",
     "eslint": "^8.44.0",
     "glob": "^10.3.3",
-    "mocha": "^10.2.0",
+    "mocha": "^10.8.2",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
