@@ -1,5 +1,12 @@
 # fstring-converter
 
+
+------
+
+**NOTE**: No feature change is planned for this extension. The inbuilt settings in vscode could be an alternative to explore.
+
+---
+
 This extension converts python string to f-string and vice-versa based on presence of `{.*}` within `quotes` or not respectively.
 
 Since `f-strings` feature is available `python` `3.6` onwards, this extension **should** be `enabled` with **python** versions `3.6+` only. This does **not** play well with `str.format()`.
